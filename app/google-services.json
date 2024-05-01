@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "759830572207",
+    "firebase_url": "https://obsidiansurvey-7ccde-default-rtdb.firebaseio.com",
+    "project_id": "obsidiansurvey-7ccde",
+    "storage_bucket": "obsidiansurvey-7ccde.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:759830572207:android:ae81fdf0f6ad37e212f85a",
+        "android_client_info": {
+          "package_name": "com.amer.obsididianSurvey"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAWbzJbAOmClfrLUy4eWfzCCjRp0c9apd0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
