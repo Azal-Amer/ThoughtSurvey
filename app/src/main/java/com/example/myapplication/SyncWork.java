@@ -2,27 +2,27 @@ package com.example.myapplication;
 
 import static com.example.myapplication.MainActivity.stringToInt;
 
-import androidx.annotation.NonNull;
-import androidx.work.Worker;
-import androidx.work.WorkerParameters;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 import android.widget.TableLayout;
 
-import com.amer.obsididianSurvey.R;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
+import androidx.annotation.NonNull;
+import androidx.work.Worker;
+import androidx.work.WorkerParameters;
+
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.gson.Gson;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.List;
 public class SyncWork extends Worker {
     public static final String TAG = "MyPeriodicWork";
     String documentId = "data.json";
@@ -164,32 +164,30 @@ public class SyncWork extends Worker {
                 Log.d("RANDOM TIME",timeString);
             }
 
-
-            Context applicationContext = getApplicationContext();
-            if (applicationContext instanceof MainActivity) {
-                TableLayout notificationTable = ((MainActivity) applicationContext).findViewById(R.id.notificationTable);
-                NotificationHelper notificationHelper = new NotificationHelper(notificationTable);
-                notificationHelper.createNotificationTunnel();
-
-                // Sort randomTimes by time
-                for (int i = 0; i < randomTimes.size(); i++) {
-                    notificationHelper.setTimeAlarm(randomTimes.get(i), "Azal's scheduled test for " + i, i);
-                }
-            } else {
-                Log.e(TAG, "Application context is not an instance of MainActivity");
-            }
         }
         catch (Exception exception){
             Log.d(TAG, String.valueOf(exception));
             Log.e("Time Generator", String.valueOf(exception));
         }
-        NotificationHelper notificationHelper = new NotificationHelper(getApplicationContext());
-        notificationHelper.createNotificationTunnel();
 
-//        sort randomTimes by time
-        for(int i = 0;i< randomTimes.size();i++){
-            notificationHelper.setTimeAlarm(randomTimes.get(i),"Azal's scheduled test for "+ i,i);
+
+        Context applicationContext = getApplicationContext();
+        if (applicationContext instanceof MainActivity) {
+            int notificationTableId = Integer.parseInt(getInputData().getString("notificationTableId"));
+            TableLayout notificationTable = ((MainActivity) applicationContext).findViewById(notificationTableId);
+            NotificationHelper notificationHelper = new NotificationHelper(notificationTable);
+            notificationHelper.createNotificationTunnel();
+
+            // Sort randomTimes by time
+            for (int i = 0; i < randomTimes.size(); i++) {
+                notificationHelper.setTimeAlarm(randomTimes.get(i), "Azal's scheduled test for " + i, i);
+            }
+        } else {
+            Log.e(TAG, "Application context is not an instance of MainActivity");
         }
+
+
+
 
 
 //        the purpose of this will, from top bottom, schedule the random times

@@ -1,43 +1,30 @@
 package com.example.myapplication;
 
-import android.app.AlarmManager;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
 import android.content.Context;
-import android.content.Intent;
-import android.app.PendingIntent;
-
+import android.content.SharedPreferences;
 import android.icu.util.Calendar;
-import android.os.Build;
-import androidx.work.OneTimeWorkRequest;
-import androidx.work.WorkManager;
 import android.os.Bundle;
-
-import com.amer.obsididianSurvey.R;
-
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.util.Log;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
-import android.util.Log;
-
-import androidx.work.*;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.work.Data;
+import androidx.work.ExistingPeriodicWorkPolicy;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 
-import java.lang.reflect.Type;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
-
+import com.amer.obsididianSurvey.R;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import android.content.SharedPreferences;
+import java.lang.reflect.Type;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
     String documentId = "data.json";
@@ -104,9 +91,15 @@ public class MainActivity extends AppCompatActivity {
 
         OneTimeWorkRequest initialWorkRequest = new OneTimeWorkRequest.Builder(SyncWork.class)
                 .setInitialDelay(initialDelay, TimeUnit.MILLISECONDS)
+                .setInputData(new Data.Builder()
+                        .putString("notificationTableId", String.valueOf(notificationTable.getId()))
+                        .build())
                 .build();
 
         PeriodicWorkRequest periodicWorkRequest = new PeriodicWorkRequest.Builder(SyncWork.class, 24, TimeUnit.HOURS)
+                .setInputData(new Data.Builder()
+                    .putString("notificationTableId", String.valueOf(notificationTable.getId()))
+                    .build())
                 .build();
 
         WorkManager.getInstance(this)
@@ -129,7 +122,10 @@ public class MainActivity extends AppCompatActivity {
         List<Map<String, Object>> times = null;
 
         // Enqueue a one-time work request to run SyncWork
-        OneTimeWorkRequest workRequest = new OneTimeWorkRequest.Builder(SyncWork.class).build();
+        OneTimeWorkRequest workRequest = new OneTimeWorkRequest.Builder(SyncWork.class)
+                .setInputData(new Data.Builder()
+                .putString("notificationTableId", String.valueOf(notificationTable.getId()))
+                .build()).build();
         // Enqueue the work request
         WorkManager.getInstance(getApplicationContext()).enqueue(workRequest);
 
