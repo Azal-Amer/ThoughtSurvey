@@ -37,7 +37,11 @@ public class NotificationHelper {
         createNotificationTunnel();
         Intent intent = new Intent(context, ReminderBroadcast.class);
         intent.putExtra("notification_body", body);
-        URIGenerator uriGenerator = new URIGenerator();
+
+
+        URIGenerator uriGenerator =  MainActivity.uriGenerator;
+
+
         String uri = uriGenerator.Generator();
         intent.putExtra("URI", uri + i);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, i, intent, PendingIntent.FLAG_IMMUTABLE);
