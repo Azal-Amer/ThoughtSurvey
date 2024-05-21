@@ -8,7 +8,9 @@ import androidx.work.WorkerParameters;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
+import android.widget.TableLayout;
 
+import com.amer.obsididianSurvey.R;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -160,6 +162,21 @@ public class SyncWork extends Worker {
                 timeGeneration.Time time = randomTimes.get(i);
                 String timeString = time.toString();
                 Log.d("RANDOM TIME",timeString);
+            }
+
+
+            Context applicationContext = getApplicationContext();
+            if (applicationContext instanceof MainActivity) {
+                TableLayout notificationTable = ((MainActivity) applicationContext).findViewById(R.id.notificationTable);
+                NotificationHelper notificationHelper = new NotificationHelper(notificationTable);
+                notificationHelper.createNotificationTunnel();
+
+                // Sort randomTimes by time
+                for (int i = 0; i < randomTimes.size(); i++) {
+                    notificationHelper.setTimeAlarm(randomTimes.get(i), "Azal's scheduled test for " + i, i);
+                }
+            } else {
+                Log.e(TAG, "Application context is not an instance of MainActivity");
             }
         }
         catch (Exception exception){

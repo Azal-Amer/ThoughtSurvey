@@ -17,6 +17,8 @@ import com.amer.obsididianSurvey.R;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 
 import android.util.Log;
@@ -41,8 +43,9 @@ public class MainActivity extends AppCompatActivity {
     String documentId = "data.json";
     String originalString = "Hello, World!";
     List<timeGeneration.Time> randomTimes;
+    TableLayout notificationTable;
 
-    private TextView textViewStatus;
+    public static TextView textViewStatus;
     private static final String TAG = "MainActivity";
     public static Object stringToInt(String str) {
         if (str != null && str.length() == 1 && Character.isDigit(str.charAt(0))) {
@@ -54,6 +57,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        notificationTable = findViewById(R.id.notificationTable);
+
+
         LocalDate now = LocalDate.now();
         String seed = now.getDayOfMonth() +
                 "" + now.getMonthValue() +
@@ -71,6 +77,9 @@ public class MainActivity extends AppCompatActivity {
         Map<String, Object> data = null;
         SharedPreferences sharedPref = this.getSharedPreferences("AppConfig", Context.MODE_PRIVATE);
         String jsonConfig = sharedPref.getString("ObsidianConfig", null);
+
+//        the below was written because we wanted to make sure that we were properly saving the firestore config
+//        for situations of no internet access
         if (jsonConfig != null) {
             Gson gson = new Gson();
             Type type = new TypeToken<Map<String, Object>>(){}.getType();
@@ -78,8 +87,11 @@ public class MainActivity extends AppCompatActivity {
             // Now you have your data back as a Map
         }
 
+        NotificationHelper notificationHelper = new NotificationHelper(notificationTable);
+        
 
 
+//        This below logic makes our periodicWorkRequest is enabled at the correct time
         Calendar currentTime = Calendar.getInstance();
         Calendar nextMidnight = Calendar.getInstance();
         nextMidnight.add(Calendar.DAY_OF_MONTH, 1);
@@ -122,9 +134,29 @@ public class MainActivity extends AppCompatActivity {
         WorkManager.getInstance(getApplicationContext()).enqueue(workRequest);
 
 
-
+//making the visuals of the app
         sb.append("ActiveDay").append(activeDay).append("\n").append("Call Count:").append(callCount).append("\n").append("Time Range: ").append((timeRange)).append("\n");
         textViewStatus.setText(sb);
+
+
+//        testing debug table
+
+        TableRow row = new TableRow(this);
+
+        TextView hourTextView = new TextView(this);
+        hourTextView.setText(String.valueOf(1));
+        hourTextView.setPadding(8, 8, 8, 8);
+        row.addView(hourTextView);
+
+        TextView minuteTextView = new TextView(this);
+        minuteTextView.setText(String.valueOf(10));
+        minuteTextView.setPadding(8, 8, 8, 8);
+        row.addView(minuteTextView);
+        TextView uriTextView = new TextView(this);
+        uriTextView.setText("google.com");
+        uriTextView.setPadding(8, 8, 8, 8);
+        row.addView(uriTextView);
+        this.notificationTable.addView(row);
 
     }
 

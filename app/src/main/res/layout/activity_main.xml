@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -38,5 +39,36 @@
         android:textColor="@color/white"
         android:padding="16dp" />
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="?attr/actionBarSize">
+
+        <TableLayout
+            android:id="@+id/notificationTable"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:stretchColumns="*">
+
+            <TableRow>
+                <TextView
+                    android:text="Hour"
+                    android:padding="8dp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:text="Minute"
+                    android:padding="8dp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:text="URI"
+                    android:padding="8dp"
+                    android:textStyle="bold" />
+            </TableRow>
+
+        </TableLayout>
+
+    </ScrollView>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

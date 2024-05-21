@@ -10,13 +10,20 @@ import android.os.Build;
 
 import java.util.Calendar;
 import android.util.Log;
+import android.widget.TableLayout;
+import android.widget.TableRow;
+import android.widget.TextView;
 
 public class NotificationHelper {
     private Context context;
+    private TableLayout notificationTable;
     public static final String TAG = "Notification Helper";
     public NotificationHelper(Context context) {
         this.context = context;
 
+    }
+    public NotificationHelper(TableLayout notificationTable) {
+        this.notificationTable = notificationTable;
     }
 
     public void createNotificationTunnel() {
@@ -45,6 +52,9 @@ public class NotificationHelper {
         int hour = (int) (double) time.hour;
         int minute = (int) (double) time.minute;
 
+//        okay we want to take the value of time, which has an hour and minute property, along with the URI,
+//        add it to a table.
+
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.HOUR_OF_DAY, hour);
         calendar.set(Calendar.MINUTE, minute);
@@ -57,7 +67,35 @@ public class NotificationHelper {
             Log.d(TAG, "Scheduled Time" + scheduledTimeMillis);
             Log.d(TAG, "set notification for " + hour + ":" + minute);
             alarmManager.setExact(AlarmManager.RTC_WAKEUP, scheduledTimeMillis, pendingIntent);
+            addNotificationToTable(hour, minute, uri + i);
         }
 
+    }
+    private void addNotificationToTable(int hour, int minute, String uri) {
+        Log.d(TAG, "addNotificationToTable called");
+
+        ((MainActivity) notificationTable.getContext()).runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                TableRow row = new TableRow(context);
+
+                TextView hourTextView = new TextView(context);
+                hourTextView.setText(String.valueOf(hour));
+                hourTextView.setPadding(8, 8, 8, 8);
+                row.addView(hourTextView);
+
+                TextView minuteTextView = new TextView(context);
+                minuteTextView.setText(String.valueOf(minute));
+                minuteTextView.setPadding(8, 8, 8, 8);
+                row.addView(minuteTextView);
+
+                TextView uriTextView = new TextView(context);
+                uriTextView.setText(uri);
+                uriTextView.setPadding(8, 8, 8, 8);
+                row.addView(uriTextView);
+
+                ((MainActivity) context).notificationTable.addView(row);
+            }
+        });
     }
 }
